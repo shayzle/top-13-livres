@@ -1,0 +1,497 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>
+    (function () {
+      const RO_MSG = 'ResizeObserver loop';
+      window.addEventListener('error', (e) => {
+        if (e && e.message && e.message.indexOf(RO_MSG) !== -1) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          return false;
+        }
+      }, true);
+      window.onerror = function (msg) {
+        if (typeof msg === 'string' && msg.indexOf(RO_MSG) !== -1) return true;
+        return false;
+      };
+    })();
+  </script>
+  <title>Top 11 Livres · Shanisya Lahida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000;
+      --fg: #ffffff;
+      --fg-dim: rgba(255,255,255,0.78);
+      --fg-faint: rgba(255,255,255,0.38);
+      --blue: #2b30ff;
+      --cyan: #5dffd6;
+      --gutter-x: clamp(20px, 4vw, 64px);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: var(--bg); color: var(--fg);
+      font-family: 'Space Mono', ui-monospace, SFMono-Regular, monospace;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    #root { width: 100%; min-height: 100vh; }
+    a { color: inherit; }
+    button { font-family: inherit; }
+
+    .page {
+      min-height: 100vh;
+      padding: clamp(16px, 2.4vw, 36px) var(--gutter-x);
+      padding-bottom: clamp(40px, 8vw, 80px);
+    }
+
+    .section-title {
+      margin: 0 0 clamp(36px, 6vw, 72px);
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(40px, 9vw, 110px);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--blue);
+      text-wrap: balance;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+      gap: clamp(32px, 5vw, 96px);
+      align-items: center;
+    }
+    @media (max-width: 860px) {
+      .main-grid { grid-template-columns: 1fr; gap: clamp(24px, 5vw, 40px); }
+    }
+
+    .eyebrow {
+      font-size: clamp(11px, 1.1vw, 13px);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--fg-faint);
+      margin-bottom: clamp(16px, 2vw, 28px);
+    }
+    .body-copy {
+      margin: 0;
+      font-size: clamp(13px, 1.3vw, 15px);
+      line-height: 1.6;
+      color: var(--fg);
+      max-width: 380px;
+      text-wrap: pretty;
+    }
+    @media (max-width: 860px) { .body-copy { max-width: 100%; } }
+
+    .fan-col { width: 100%; }
+
+    .caption {
+      margin-top: clamp(20px, 3vw, 28px);
+      text-align: center;
+      font-size: clamp(12px, 1.3vw, 14px);
+      color: var(--fg-dim);
+      letter-spacing: 0.02em;
+      line-height: 1.6;
+    }
+    .caption-title { color: var(--blue); font-weight: 700; display: block; }
+    .caption-author { color: var(--fg-dim); display: block; }
+    .caption-lang {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--fg-faint);
+    }
+
+    .dots {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 4px;
+      border: none; padding: 0;
+      background: rgba(255,255,255,0.22);
+      cursor: pointer;
+      transition: width 240ms, background 240ms;
+    }
+    .dot.is-active { width: 22px; background: var(--blue); }
+
+    .hint {
+      margin-top: clamp(20px, 3vw, 28px);
+      font-size: clamp(10px, 1vw, 11px);
+      letter-spacing: 0.22em;
+      color: var(--fg-faint);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .nav { gap: 14px; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react">
+
+const BOOKS = [
+  {
+    title: 'Dix Questions sur le Féminisme',
+    author: 'Valérie Rey-Robert',
+    lang: 'Version française',
+    cover: 'feminisme.jpg',
+  },
+  {
+    title: 'Why Nations Fail',
+    author: 'Daron Acemoglu & James A. Robinson',
+    lang: 'Version anglaise',
+    cover: 'whynationsfail.jpg',
+  },
+  {
+    title: '21 Leçons pour le XXIe Siècle',
+    author: 'Yuval Noah Harari',
+    lang: 'Version française',
+    cover: '21lessons.jpg',
+  },
+  {
+    title: 'The Mind of a Murderer',
+    author: 'Dr Richard Taylor',
+    lang: 'Version anglaise',
+    cover: 'mindofamurderer.jpg',
+  },
+  {
+    title: 'Nexus',
+    author: 'Yuval Noah Harari',
+    lang: 'Version anglaise',
+    cover: 'nexus.jpg',
+  },
+  {
+    title: 'Factfulness',
+    author: 'Hans Rosling',
+    lang: 'Version anglaise',
+    cover: 'factfulness.jpg',
+  },
+  {
+    title: '48 Laws of Power',
+    author: 'Robert Greene',
+    lang: 'Version anglaise',
+    cover: '48laws.jpg',
+  },
+  {
+    title: 'The Daily Laws',
+    author: 'Robert Greene',
+    lang: 'Version anglaise',
+    cover: 'dailylaws.jpg',
+  },
+  {
+    title: 'Le Journal d\'Anne Frank',
+    author: 'David Polonsky',
+    lang: 'Version française : Roman graphique',
+    cover: 'annefrank.jpg',
+  },
+  {
+    title: 'The Economics Book',
+    author: 'DK : Big Ideas Simply Explained',
+    lang: 'Version anglaise',
+    cover: 'economics.jpg',
+  },
+  {
+    title: 'The Medicine Book',
+    author: 'DK : Big Ideas Simply Explained',
+    lang: 'Version anglaise',
+    cover: 'medicine.jpg',
+  },
+  {
+    title: 'Leonardo da Vinci',
+    author: 'Walter Isaacson',
+    lang: 'Version anglaise',
+    cover: 'leonardodavinci.jpg',
+  },
+  {
+    title: 'Dead Men Do Tell Tales',
+    author: 'William Maples Ph.D',
+    lang: 'Version anglaise',
+    cover: 'deadmen.jpg',
+  },
+];
+
+function useMediaQuery(query) {
+  const [matches, setMatches] = React.useState(() =>
+    typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(query).matches : false
+  );
+  React.useEffect(() => {
+    const m = window.matchMedia(query);
+    const onChange = () => setMatches(m.matches);
+    onChange();
+    m.addEventListener ? m.addEventListener('change', onChange) : m.addListener(onChange);
+    return () => {
+      m.removeEventListener ? m.removeEventListener('change', onChange) : m.removeListener(onChange);
+    };
+  }, [query]);
+  return matches;
+}
+
+function BookCover({ book }) {
+  return (
+    <div style={{
+      display: 'block',
+      width: '100%',
+      height: '100%',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      <img
+        src={book.cover}
+        alt={`${book.title} — ${book.author}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+          pointerEvents: 'none',
+        }}
+        onError={(e) => {
+          e.target.style.display = 'none';
+          e.target.parentNode.style.background = '#1a1a1a';
+          e.target.parentNode.innerHTML = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center;color:rgba(255,255,255,0.4);font-family:Space Mono,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;line-height:1.6">${book.title}<br/><span style="opacity:0.5;font-size:9px;margin-top:8px">${book.author}</span></div>`;
+        }}
+      />
+    </div>
+  );
+}
+
+function ArrowBtn({ side, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label={side === 'left' ? 'Livre précédent' : 'Livre suivant'}
+      style={{
+        position: 'absolute',
+        [side]: 8,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: 44, height: 44,
+        borderRadius: '50%',
+        background: 'rgba(255,255,255,0.06)',
+        border: '1px solid rgba(255,255,255,0.18)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        color: '#fff',
+        cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        zIndex: 100,
+        transition: 'background 200ms',
+        fontFamily: 'Space Mono, monospace',
+        fontSize: 18
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.16)'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
+    >
+      {side === 'left' ? '←' : '→'}
+    </button>
+  );
+}
+
+function Fan({ books, active, setActive, isMobile }) {
+  const wrapRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    let accum = 0;
+    const onWheel = (e) => {
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      accum += delta;
+      if (Math.abs(accum) > 60) {
+        const dir = Math.sign(accum);
+        accum = 0;
+        setActive((i) => (i + dir + books.length) % books.length);
+        e.preventDefault();
+      } else if (Math.abs(e.deltaX) > 0) {
+        e.preventDefault();
+      }
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [books.length, setActive]);
+
+  React.useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    let startX = null;
+    let lastJump = 0;
+    const onDown = (e) => { startX = e.touches ? e.touches[0].clientX : e.clientX; lastJump = 0; };
+    const onMove = (e) => {
+      if (startX == null) return;
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const dx = x - startX;
+      const threshold = isMobile ? 60 : 80;
+      const steps = Math.trunc(dx / threshold);
+      const delta = steps - lastJump;
+      if (delta !== 0) {
+        lastJump = steps;
+        setActive((i) => ((i - delta) % books.length + books.length) % books.length);
+      }
+    };
+    const onUp = () => { startX = null; };
+    el.addEventListener('mousedown', onDown);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    el.addEventListener('touchstart', onDown, { passive: true });
+    el.addEventListener('touchmove', onMove, { passive: true });
+    el.addEventListener('touchend', onUp);
+    return () => {
+      el.removeEventListener('mousedown', onDown);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      el.removeEventListener('touchstart', onDown);
+      el.removeEventListener('touchmove', onMove);
+      el.removeEventListener('touchend', onUp);
+    };
+  }, [books.length, setActive, isMobile]);
+
+  const stepPx = isMobile ? 60 : 120;
+  const coverSize = isMobile ? 'clamp(160px, 55vw, 240px)' : 'clamp(200px, 25vw, 320px)';
+
+  return (
+    <div
+      ref={wrapRef}
+      style={{
+        position: 'relative',
+        height: isMobile ? 'clamp(260px, 55vw, 340px)' : 'clamp(360px, 52vh, 580px)',
+        width: '100%',
+        cursor: 'grab',
+        userSelect: 'none',
+        touchAction: 'pan-y'
+      }}
+      onMouseDown={(e) => { e.currentTarget.style.cursor = 'grabbing'; }}
+      onMouseUp={(e) => { e.currentTarget.style.cursor = 'grab'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.cursor = 'grab'; }}
+    >
+      {books.map((b, i) => {
+        const n = books.length;
+        let offset = i - active;
+        if (offset > n / 2) offset -= n;
+        if (offset < -n / 2) offset += n;
+        const abs = Math.abs(offset);
+        const dir = Math.sign(offset);
+        if (abs > (isMobile ? 3 : 4)) return null;
+
+        const x = dir * Math.min(abs, 4) * stepPx;
+        const scale = abs === 0 ? 1 : 0.86 - Math.min(abs - 1, 3) * 0.05;
+        const z = books.length - abs;
+        const opacity = abs > 3 ? 0.0 : abs > 2 ? 0.55 : 1;
+        const isActive = abs === 0;
+
+        return (
+          <div
+            key={b.title}
+            onClick={() => { if (!isActive) setActive(i); }}
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              width: coverSize,
+              aspectRatio: '2 / 3',
+              transform: `translate(calc(-50% + ${x}px), -50%) scale(${scale})`,
+              transformOrigin: 'center',
+              zIndex: z,
+              opacity,
+              transition: 'transform 520ms cubic-bezier(.2,.8,.2,1), opacity 320ms, box-shadow 320ms',
+              cursor: 'pointer',
+              boxShadow: isActive
+                ? '0 28px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)'
+                : '0 14px 30px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04)',
+              background: '#111',
+              overflow: 'hidden',
+            }}
+          >
+            <BookCover book={b} />
+          </div>
+        );
+      })}
+
+      <ArrowBtn onClick={() => setActive((i) => (i - 1 + books.length) % books.length)} side="left" />
+      <ArrowBtn onClick={() => setActive((i) => (i + 1) % books.length)} side="right" />
+    </div>
+  );
+}
+
+function BooksSection() {
+  const [active, setActive] = React.useState(8);
+  const isMobile = useMediaQuery('(max-width: 760px)');
+  const b = BOOKS[active];
+
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      if (e.code === 'ArrowLeft') setActive((i) => (i - 1 + BOOKS.length) % BOOKS.length);
+      if (e.code === 'ArrowRight') setActive((i) => (i + 1) % BOOKS.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  return (
+    <div className="page">
+      <h2 className="section-title">Top 13 Livres Que J'ai Lus</h2>
+
+      <div className="main-grid">
+        <div className="text-col">
+          <div className="eyebrow">LECTURES + SHAY</div>
+          <p className="body-copy">
+            Les livres qui ont le plus marqué ma façon de penser : histoire, politique, sciences, féminisme, psychologie criminelle, médecine. Un mélange éclectique qui reflète ma curiosité.
+          </p>
+        </div>
+
+        <div className="fan-col">
+          <Fan books={BOOKS} active={active} setActive={setActive} isMobile={isMobile} />
+
+          <div className="caption">
+            <span className="caption-title">{b.title}</span>
+            <span className="caption-author">{b.author}</span>
+            <span className="caption-lang">{b.lang}</span>
+          </div>
+
+          <div className="dots">
+            {BOOKS.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                aria-label={`Livre ${i + 1}`}
+                className={'dot' + (i === active ? ' is-active' : '')}
+              />
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<BooksSection />);
+
+  </script>
+</body>
+</html>
