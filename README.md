@@ -2,7 +2,7 @@
 
 An interactive page showcasing the 13 books that have shaped the way I think.
 
-Live: [Click Here !](https://shayzle.github.io/top-13-livres/)
+Live: [Click Here !](https://shay-top-13-livres.netlify.app)
 
 ---
 
