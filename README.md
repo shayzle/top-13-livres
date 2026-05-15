@@ -2,7 +2,7 @@
 
 An interactive page showcasing the 13 books that have shaped the way I think.
 
-Live: [Click Here !](https://top-13-livres.netlify.app)
+Live: [Click Here !](https://top13livres.netlify.app)
 
 ---
 
