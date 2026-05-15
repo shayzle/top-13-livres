@@ -370,15 +370,15 @@ function Fan({ books, active, setActive, isMobile }) {
     };
   }, [books.length, setActive, isMobile]);
 
-  const stepPx = isMobile ? 60 : 120;
-  const coverSize = isMobile ? 'clamp(160px, 55vw, 240px)' : 'clamp(200px, 25vw, 320px)';
+  const stepPx = isMobile ? 50 : 120;
+  const coverSize = isMobile ? 'clamp(160px, 50vw, 220px)' : 'clamp(200px, 25vw, 320px)';
 
   return (
     <div
       ref={wrapRef}
       style={{
         position: 'relative',
-        height: isMobile ? 'clamp(260px, 55vw, 340px)' : 'clamp(360px, 52vh, 580px)',
+        height: isMobile ? 'clamp(300px, 65vw, 400px)' : 'clamp(360px, 52vh, 580px)',
         width: '100%',
         cursor: 'grab',
         userSelect: 'none',
@@ -460,7 +460,7 @@ function BooksSection() {
         <div className="text-col">
           <div className="eyebrow">LECTURES + SHAY</div>
           <p className="body-copy">
-            Les livres qui ont le plus marqué ma façon de penser : histoire, politique, sciences, féminisme, psychologie criminelle, médecine.
+            Les livres qui ont le plus marqué ma façon de penser : histoire, politique, sciences, féminisme, psychologie criminelle, médecine. Un mélange éclectique qui reflète ma curiosité.
           </p>
         </div>
 
